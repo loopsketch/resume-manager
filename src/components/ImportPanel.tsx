@@ -243,7 +243,8 @@ export function ImportPanel({
             </button>
           )}
           <p className="text-xs text-slate-400">
-            Qwen3.5-4B (Q4_K_M) を CPU で実行します。データは外部に送信されません。
+            Qwen3.5-4B (Q4_K_M) をローカル実行します (GPU があれば自動利用 / なければ
+            CPU)。データは外部に送信されません。
           </p>
         </div>
       </section>

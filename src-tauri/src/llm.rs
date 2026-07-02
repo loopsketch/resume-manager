@@ -178,8 +178,10 @@ async fn download_file(
 
 /// 実行環境に合った llama.cpp 最新リリースのアセット (名前, URL) を解決する。
 async fn resolve_llama_asset() -> Result<(String, String), String> {
+    // Windows x64 は Vulkan ビルドを使う (AMD / NVIDIA / Intel GPU で動作し、
+    // GPU がない場合は同梱の CPU バックエンドに自動フォールバックする)
     let key = if cfg!(all(target_os = "windows", target_arch = "x86_64")) {
-        "bin-win-cpu-x64.zip"
+        "bin-win-vulkan-x64.zip"
     } else if cfg!(all(target_os = "windows", target_arch = "aarch64")) {
         "bin-win-cpu-arm64.zip"
     } else if cfg!(all(target_os = "macos", target_arch = "aarch64")) {
@@ -328,6 +330,9 @@ pub async fn start_llm(app: AppHandle, state: State<'_, LlmState>) -> Result<(),
         &LLM_PORT.to_string(),
         "-c",
         "16384",
+        // GPU が利用可能なら全レイヤーをオフロードする (CPU のみの場合は無視される)
+        "-ngl",
+        "999",
         "--jinja",
         // 思考モードを無効化（CPU での応答時間短縮のため）
         "--reasoning-budget",

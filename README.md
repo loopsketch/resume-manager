@@ -33,7 +33,7 @@ PDF などで入力した業務履歴書をデータ化して JSON で保持し�
 
 ローカル LLM により判定します。
 
-- **推論エンジン**: llama.cpp（llama-server）をサイドカーとしてアプリに同梱し、HTTP 経由で利用（CPU のみで動作）
+- **推論エンジン**: llama.cpp（llama-server）をサイドカーとして HTTP 経由で利用。Windows は Vulkan ビルド（AMD / NVIDIA / Intel GPU で動作し、GPU がなければ CPU に自動フォールバック）、Mac は Metal 対応ビルドを初回セットアップ時にダウンロード
 - **モデル**: 以下いずれかの量子化 GGUF モデル（Q4 クラスの軽量量子化を想定）
   - [Qwen3.5-4B](https://huggingface.co/unsloth/Qwen3.5-4B-GGUF)
   - [Gemma 4 E2B](https://huggingface.co/unsloth/gemma-4-E2B-it-GGUF)
@@ -59,7 +59,7 @@ PDF などで入力した業務履歴書をデータ化して JSON で保持し�
 - **アプリケーション基盤**: Tauri（Rust + OS 標準 WebView）
 - **フロントエンド**: （例）TypeScript / React
 - **データ形式**: JSON
-- **LLM**: llama.cpp（llama-server サイドカー）+ Qwen3.5-4B / Gemma 4 E2B 量子化 GGUF モデル（ローカル・CPU 動作）
+- **LLM**: llama.cpp（llama-server サイドカー）+ Qwen3.5-4B / Gemma 4 E2B 量子化 GGUF モデル（ローカル動作、GPU: Vulkan / Metal 対応・CPU フォールバックあり）
 - **外部連携**: Google Calendar API
 - **配布形式**: Tauri バンドラによるインストーラ（Windows: NSIS / MSI、Mac: DMG）
 
