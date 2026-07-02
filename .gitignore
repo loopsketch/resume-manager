@@ -31,3 +31,7 @@ src-tauri/gen/
 # LLM models (downloaded at first launch, not committed)
 *.gguf
 models/
+works/
+
+# pdf.js assets copied from node_modules by scripts/copy-pdfjs-assets.mjs
+public/pdfjs/

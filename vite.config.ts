@@ -1,24 +1,15 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
-import { viteStaticCopy } from "vite-plugin-static-copy";
 
 // @ts-expect-error process is a nodejs global
 const host = process.env.TAURI_DEV_HOST;
 
 // https://vite.dev/config/
 export default defineConfig(async () => ({
-  plugins: [
-    react(),
-    tailwindcss(),
-    // pdf.js の日本語 (CJK) 対応に必要な CMap / 標準フォントを配信物に含める
-    viteStaticCopy({
-      targets: [
-        { src: "node_modules/pdfjs-dist/cmaps/*", dest: "pdfjs/cmaps" },
-        { src: "node_modules/pdfjs-dist/standard_fonts/*", dest: "pdfjs/standard_fonts" },
-      ],
-    }),
-  ],
+  // pdf.js の日本語 (CJK) 対応に必要な CMap / 標準フォントは
+  // scripts/copy-pdfjs-assets.mjs が public/pdfjs/ へコピーする
+  plugins: [react(), tailwindcss()],
 
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
   //
