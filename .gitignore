@@ -1,0 +1,33 @@
+# Node
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Tauri / Rust
+src-tauri/target/
+src-tauri/gen/
+
+# Env
+.env
+.env.*
+!.env.example
+
+# LLM models (downloaded at first launch, not committed)
+*.gguf
+models/
