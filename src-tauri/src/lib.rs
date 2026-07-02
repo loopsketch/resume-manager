@@ -1,3 +1,5 @@
+mod llm;
+
 use std::fs;
 use std::path::PathBuf;
 
@@ -44,7 +46,22 @@ fn save_resume(app: tauri::AppHandle, data: serde_json::Value) -> Result<(), Str
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![load_resume, save_resume])
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .manage(llm::LlmState::default())
+        .invoke_handler(tauri::generate_handler![
+            load_resume,
+            save_resume,
+            llm::llm_status,
+            llm::setup_llm,
+            llm::start_llm,
+            llm::stop_llm,
+            llm::extract_resume,
+        ])
+        .build(tauri::generate_context!())
+        .expect("error while building tauri application")
+        .run(|app, event| {
+            // アプリ終了時にサイドカーの llama-server を確実に停止する
+            if let tauri::RunEvent::Exit = event {
+                app.state::<llm::LlmState>().kill();
+            }
+        });
 }

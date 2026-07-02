@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { ImportPanel } from "./components/ImportPanel";
 import { ProfileForm } from "./components/ProfileForm";
 import { ProjectsEditor } from "./components/ProjectsEditor";
 import { SkillsEditor } from "./components/SkillsEditor";
+import { mergeResume, type ImportMode, type ResumePatch } from "./lib/importResume";
 import { loadResume, saveResume } from "./lib/store";
 import { createEmptyResume, type ResumeData } from "./types/resume";
 
@@ -9,6 +11,7 @@ const TABS = [
   { id: "profile", label: "プロフィール" },
   { id: "skills", label: "スキル" },
   { id: "projects", label: "職務経歴" },
+  { id: "import", label: "インポート" },
 ] as const;
 
 type TabId = (typeof TABS)[number]["id"];
@@ -37,6 +40,11 @@ function App() {
 
   const update = (partial: Partial<ResumeData>) => {
     setResume((prev) => (prev ? { ...prev, ...partial } : prev));
+    setDirty(true);
+  };
+
+  const handleImport = (patch: ResumePatch, mode: ImportMode) => {
+    setResume((prev) => (prev ? mergeResume(prev, patch, mode) : prev));
     setDirty(true);
   };
 
@@ -129,6 +137,7 @@ function App() {
             onChange={(projects) => update({ projects })}
           />
         )}
+        {tab === "import" && <ImportPanel onImport={handleImport} />}
       </div>
     </main>
   );
